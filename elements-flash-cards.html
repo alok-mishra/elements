@@ -189,17 +189,71 @@
             .card-face { font-size: 2.6rem; }
             .card-back { font-size: 1.4rem; }
         }
+
+        /* New styles for card wrapper and side buttons */
+        .card-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            margin-bottom: 8px; /* keep spacing from controls */
+        }
+
+        /* side arrow buttons styled like the card (transparent finish) */
+        .side-btn {
+            /* visual / font */
+            font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            font-size: 2.8rem;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            /* translucent / card-like appearance (not solid black/blue) */
+            background: rgba(255,255,255,0.12);           /* translucent, matches card faces */
+            border: 2px solid rgba(255,255,255,0.22);     /* same border feel as card */
+            color: #fff;
+
+            /* sizing to match the card */
+            width: 72px;
+            height: calc(var(--card-h) - 12px);
+            border-radius: 10px;
+
+            /* subtle lift, no heavy dark fill */
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            transition: transform 0.12s, background 0.12s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Press feedback */
+        .side-btn:active { transform: translateY(2px); }
+
+        /* keep sizes reasonable on narrow screens */
+        @media (max-width: 480px) {
+            .side-btn { width: 56px; height: calc(var(--card-h) * 0.78); font-size: 2.2rem; }
+        }
     </style>
 </head>
 
 <body>
     <h1>Element Flashcards</h1>
 
-    <div class="flashcard" id="flashcard" role="button" aria-label="Element flashcard">
-        <div class="card-inner" id="card-inner">
-            <div class="card-face card-front" id="card-front"></div>
-            <div class="card-face card-back" id="card-back"></div>
+    <!-- replace the single .flashcard block with this wrapper that includes side arrows -->
+    <div class="card-wrap">
+        <button class="side-btn left" id="sidePrev" aria-label="Previous">&lt;</button>
+
+        <div class="flashcard" id="flashcard" role="button" aria-label="Element flashcard">
+            <div class="card-inner" id="card-inner">
+                <div class="card-face card-front" id="card-front"></div>
+                <div class="card-face card-back" id="card-back"></div>
+            </div>
         </div>
+
+        <button class="side-btn right" id="sideNext" aria-label="Next">&gt;</button>
     </div>
 
     <div class="controls">
@@ -374,6 +428,12 @@
 
     // initial render
     updateCard();
+
+    // hookup side arrow buttons (place after your existing button hookups)
+    const sidePrev = document.getElementById('sidePrev');
+    const sideNext = document.getElementById('sideNext');
+    if (sidePrev) sidePrev.addEventListener('click', (e) => { e.preventDefault(); prev(); });
+    if (sideNext) sideNext.addEventListener('click', (e) => { e.preventDefault(); next(); });
     </script>
 </body>
 
