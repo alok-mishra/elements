@@ -46,22 +46,13 @@
             perspective: 1000px;
             margin-bottom: 14px;
             touch-action: pan-y;
+            overflow: hidden; /* prevent face content from spilling out and overlapping buttons */
         }
 
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-            border-radius: 10px;
-        }
-
-        .card-inner.flipped {
-            transform: rotateY(180deg);
-        }
-
+        /* ensure padding is included in the face size and any overflow is clipped */
         .card-face {
+            box-sizing: border-box; /* IMPORTANT: include padding in the height */
+            overflow: hidden;       /* clip long names instead of letting the face grow */
             position: absolute;
             width: 100%;
             height: 100%;
@@ -79,11 +70,25 @@
             user-select: none;
         }
 
+        /* reduce back padding slightly so text fits more reliably */
         .card-back {
             transform: rotateY(180deg);
             font-size: 1.2rem;
-            padding: 10px;
+            padding: 8px; /* smaller padding */
             text-align: center;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            border-radius: 10px;
+        }
+
+        .card-inner.flipped {
+            transform: rotateY(180deg);
         }
 
         .controls {
