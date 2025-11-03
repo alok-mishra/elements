@@ -27,10 +27,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
+            justify-content: flex-start; /* top-start layout so title isn't cropped */
+            min-height: 100vh; /* let browser manage address-bar changes */
             margin: 0;
-            padding: 16px;
+            padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 16px calc(16px + env(safe-area-inset-left, 0px));
             box-sizing: border-box;
         }
 
@@ -192,49 +192,59 @@
 
         /* New styles for card wrapper and side buttons */
         .card-wrap {
+            width: 100%;
+            max-width: calc(var(--card-w) + 160px);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
             position: relative;
-            margin-bottom: 8px; /* keep spacing from controls */
+            padding-inline: calc(12px + env(safe-area-inset-left, 0px));
+            padding-inline-end: calc(12px + env(safe-area-inset-right, 0px));
+            margin-bottom: 8px;
+            box-sizing: border-box;
         }
 
-        /* side arrow buttons styled like the card (transparent finish) */
+        /* side buttons: absolutely positioned over the card so they don't expand layout or get pushed off screen */
         .side-btn {
-            /* visual / font */
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 30;
+            pointer-events: auto;
+
             font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
             font-weight: 900;
             letter-spacing: 0.5px;
-            font-size: 2.8rem;
+            font-size: 2.4rem;
             line-height: 1;
             display: inline-flex;
             align-items: center;
             justify-content: center;
 
-            /* translucent / card-like appearance (not solid black/blue) */
-            background: rgba(255,255,255,0.12);           /* translucent, matches card faces */
-            border: 2px solid rgba(255,255,255,0.22);     /* same border feel as card */
+            background: rgba(255,255,255,0.12);
+            border: 2px solid rgba(255,255,255,0.22);
             color: #fff;
 
-            /* sizing to match the card */
             width: 72px;
             height: calc(var(--card-h) - 12px);
             border-radius: 10px;
 
-            /* subtle lift, no heavy dark fill */
             box-shadow: 0 6px 18px rgba(0,0,0,0.12);
             transition: transform 0.12s, background 0.12s;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Press feedback */
-        .side-btn:active { transform: translateY(2px); }
+        /* position specific sides */
+        .side-btn.left  { left: 8px;  } /* inside wrapper padding so safe-area won't cut it off */
+        .side-btn.right { right: 8px; }
 
-        /* keep sizes reasonable on narrow screens */
+        /* responsive shrink and keep text readable */
         @media (max-width: 480px) {
-            .side-btn { width: 56px; height: calc(var(--card-h) * 0.78); font-size: 2.2rem; }
+            .side-btn { width: 56px; height: calc(var(--card-h) * 0.78); font-size: 2rem; }
+            .card-face { font-size: 1.9rem; }       /* keep names large in portrait */
+            .card-back  { font-size: 1.9rem; padding: 8px 12px; }
+            .card-wrap  { padding-inline: calc(8px + env(safe-area-inset-left, 0px)); padding-inline-end: calc(8px + env(safe-area-inset-right, 0px)); }
         }
     </style>
 </head>
