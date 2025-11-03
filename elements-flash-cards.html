@@ -187,6 +187,30 @@
         };
 
         updateCard();
+
+    // keyboard controls: Space toggles flip, ArrowRight -> next, ArrowLeft -> prev
+    document.addEventListener('keydown', (e) => {
+        // Space (use code for consistency)
+        if (e.code === 'Space') {
+            e.preventDefault();
+            inner.classList.toggle('flipped');
+            return;
+        }
+
+        if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            current = (current + 1) % elements.length;
+            updateCard();
+            return;
+        }
+
+        if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            current = (current - 1 + elements.length) % elements.length;
+            updateCard();
+            return;
+        }
+    });
     </script>
 </body>
 
