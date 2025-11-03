@@ -159,7 +159,7 @@
             { sym: "Md", name: "Mendelevium" }
         ];
 
-        let current = 0;
+            let current = Math.floor(Math.random() * elements.length); // start on a random card
         const front = document.getElementById("card-front");
         const back = document.getElementById("card-back");
         const inner = document.getElementById("card-inner");
