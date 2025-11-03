@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Element Flashcards</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #001f3f, #005f73, #0a9396);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .flashcard {
+            width: 300px;
+            height: 180px;
+            perspective: 1000px;
+            margin-bottom: 20px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card-inner.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            backface-visibility: hidden;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-size: 2em;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            font-size: 1.4em;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button {
+            background: #00d4ff;
+            border: none;
+            color: #000;
+            font-size: 1em;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #00b0d6;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Element Flashcards</h1>
+
+    <div class="flashcard" id="flashcard">
+        <div class="card-inner" id="card-inner">
+            <div class="card-face card-front" id="card-front"></div>
+            <div class="card-face card-back" id="card-back"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="prevBtn">⬅️ Prev</button>
+        <button id="flipBtn">🔁 Flip</button>
+        <button id="nextBtn">➡️ Next</button>
+    </div>
+
+    <script>
+        const elements = [
+            { sym: "H", name: "Hydrogen" },
+            { sym: "He", name: "Helium" },
+            { sym: "Li", name: "Lithium" },
+            { sym: "Be", name: "Beryllium" },
+            { sym: "B", name: "Boron" },
+            { sym: "C", name: "Carbon" },
+            { sym: "N", name: "Nitrogen" },
+            { sym: "O", name: "Oxygen" },
+            { sym: "F", name: "Fluorine" },
+            { sym: "Ne", name: "Neon" },
+            { sym: "Na", name: "Sodium" },
+            { sym: "Mg", name: "Magnesium" },
+            { sym: "Al", name: "Aluminum" },
+            { sym: "Si", name: "Silicon" },
+            { sym: "P", name: "Phosphorus" },
+            { sym: "S", name: "Sulfur" },
+            { sym: "Cl", name: "Chlorine" },
+            { sym: "Ar", name: "Argon" },
+            { sym: "K", name: "Potassium" },
+            { sym: "Ca", name: "Calcium" },
+            { sym: "Sc", name: "Scandium" },
+            { sym: "Ti", name: "Titanium" },
+            { sym: "V", name: "Vanadium" },
+            { sym: "Cr", name: "Chromium" },
+            { sym: "Mn", name: "Manganese" },
+            { sym: "Fe", name: "Iron" },
+            { sym: "Co", name: "Cobalt" },
+            { sym: "Ni", name: "Nickel" },
+            { sym: "Cu", name: "Copper" },
+            { sym: "Zn", name: "Zinc" },
+            { sym: "Ga", name: "Gallium" },
+            { sym: "Ge", name: "Germanium" },
+            { sym: "As", name: "Arsenic" },
+            { sym: "Se", name: "Selenium" },
+            { sym: "Br", name: "Bromine" },
+            { sym: "Kr", name: "Krypton" },
+            { sym: "Ag", name: "Silver" },
+            { sym: "Sn", name: "Tin" },
+            { sym: "I", name: "Iodine" },
+            { sym: "Xe", name: "Xenon" },
+            { sym: "W", name: "Tungsten" },
+            { sym: "Au", name: "Gold" },
+            { sym: "Hg", name: "Mercury" },
+            { sym: "Pb", name: "Lead" },
+            { sym: "Bi", name: "Bismuth" },
+            { sym: "Rn", name: "Radon" },
+            { sym: "Ra", name: "Radium" },
+            { sym: "U", name: "Uranium" },
+            { sym: "Pu", name: "Plutonium" },
+            { sym: "Cm", name: "Curium" },
+            { sym: "Es", name: "Einsteinium" },
+            { sym: "Md", name: "Mendelevium" }
+        ];
+
+        let current = 0;
+        const front = document.getElementById("card-front");
+        const back = document.getElementById("card-back");
+        const inner = document.getElementById("card-inner");
+
+        function updateCard() {
+            const el = elements[current];
+            front.textContent = el.sym;
+            back.textContent = el.name;
+        }
+
+        document.getElementById("flipBtn").onclick = () => {
+            inner.classList.toggle("flipped");
+        };
+
+        document.getElementById("nextBtn").onclick = () => {
+            current = (current + 1) % elements.length;
+            inner.classList.remove("flipped");
+            updateCard();
+        };
+
+        document.getElementById("prevBtn").onclick = () => {
+            current = (current - 1 + elements.length) % elements.length;
+            inner.classList.remove("flipped");
+            updateCard();
+        };
+
+        updateCard();
+    </script>
+</body>
+
+</html>
