@@ -176,13 +176,13 @@
 
         document.getElementById("nextBtn").onclick = () => {
             current = (current + 1) % elements.length;
-            inner.classList.remove("flipped");
+            // do not remove the "flipped" class so the flip state persists
             updateCard();
         };
 
         document.getElementById("prevBtn").onclick = () => {
             current = (current - 1 + elements.length) % elements.length;
-            inner.classList.remove("flipped");
+            // do not remove the "flipped" class so the flip state persists
             updateCard();
         };
 
