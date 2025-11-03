@@ -101,6 +101,7 @@
         <button id="prevBtn">⬅️ Prev</button>
         <button id="flipBtn">🔁 Flip</button>
         <button id="nextBtn">➡️ Next</button>
+        <button id="shuffleBtn">🔀 Shuffle</button>
     </div>
 
     <script>
@@ -159,58 +160,72 @@
             { sym: "Md", name: "Mendelevium" }
         ];
 
-            let current = Math.floor(Math.random() * elements.length); // start on a random card
+            // deck holds the current order. start ordered but pick a random starting index
+            let deck = elements.slice();
+            let current = Math.floor(Math.random() * deck.length);
+
         const front = document.getElementById("card-front");
         const back = document.getElementById("card-back");
         const inner = document.getElementById("card-inner");
 
         function updateCard() {
-            const el = elements[current];
+            const el = deck[current];
             front.textContent = el.sym;
             back.textContent = el.name;
         }
+
+            function shuffleDeck() {
+                // Fisher-Yates shuffle
+                for (let i = deck.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [deck[i], deck[j]] = [deck[j], deck[i]];
+                }
+                current = 0; // show first card of shuffled deck
+                updateCard();
+            }
 
         document.getElementById("flipBtn").onclick = () => {
             inner.classList.toggle("flipped");
         };
 
         document.getElementById("nextBtn").onclick = () => {
-            current = (current + 1) % elements.length;
-            // do not remove the "flipped" class so the flip state persists
+            current = (current + 1) % deck.length;
             updateCard();
         };
 
         document.getElementById("prevBtn").onclick = () => {
-            current = (current - 1 + elements.length) % elements.length;
-            // do not remove the "flipped" class so the flip state persists
+            current = (current - 1 + deck.length) % deck.length;
             updateCard();
         };
 
+            document.getElementById("shuffleBtn").onclick = () => {
+                shuffleDeck();
+            };
+
         updateCard();
 
-    // keyboard controls: Space toggles flip, ArrowRight -> next, ArrowLeft -> prev
-    document.addEventListener('keydown', (e) => {
-        // Space (use code for consistency)
-        if (e.code === 'Space') {
-            e.preventDefault();
-            inner.classList.toggle('flipped');
-            return;
-        }
+            // keyboard controls: Space toggles flip, ArrowRight -> next, ArrowLeft -> prev
+            document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                inner.classList.toggle('flipped');
+                return;
+            }
 
-        if (e.key === 'ArrowRight') {
-            e.preventDefault();
-            current = (current + 1) % elements.length;
-            updateCard();
-            return;
-        }
+            if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                current = (current + 1) % deck.length;
+                updateCard();
+                return;
+            }
 
-        if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            current = (current - 1 + elements.length) % elements.length;
-            updateCard();
-            return;
-        }
-    });
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                current = (current - 1 + deck.length) % deck.length;
+                updateCard();
+                return;
+            }
+        });
     </script>
 </body>
 
