@@ -78,25 +78,44 @@
             width: 100%;
             height: 100%;
             border-radius: 10px;
+
+            /* prevent the mirrored/backwards content from showing through */
+            -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
+
+            /* ensure proper 3D rendering on mobile */
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+
+            /* promote to its own layer to avoid bleeding during the rotate */
+            transform: translateZ(0);
+
             background: rgba(255, 255, 255, 0.12);
             border: 2px solid rgba(255, 255, 255, 0.22);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            font-size: 2.2rem;
+            font-size: 2.2rem; /* base size for symbol */
             text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
             -webkit-user-select: none;
             user-select: none;
         }
 
-        /* reduce back padding slightly so text fits more reliably */
+        /* explicitly define front face transform */
+        .card-front {
+            -webkit-transform: rotateY(0deg);
+            transform: rotateY(0deg);
+        }
+
+        /* back face: same large font as symbol and vendor-prefix transform */
         .card-back {
+            -webkit-transform: rotateY(180deg);
             transform: rotateY(180deg);
-            font-size: 1.2rem;
-            padding: 8px; /* smaller padding */
+            font-size: 2.2rem; /* match the symbol size */
+            padding: 8px 12px;
             text-align: center;
+            line-height: 1.05;
         }
 
         .card-inner.flipped {
