@@ -40,19 +40,40 @@
             text-align: center;
         }
 
+        /* Make viewport slightly larger so the rotating card doesn't get clipped.
+           Keep visual spacing so faces won't overlap the controls when overflow is visible. */
         .flashcard {
             width: var(--card-w);
             height: var(--card-h);
             perspective: 1000px;
-            margin-bottom: 14px;
+
+            /* allow rotated edges to show */
+            overflow: visible;
+
+            /* give a small buffer around the card so shadows / edges don't touch controls */
+            margin-bottom: 28px;
+            padding: 6px;
+            box-sizing: content-box;
             touch-action: pan-y;
-            overflow: hidden; /* prevent face content from spilling out and overlapping buttons */
         }
 
-        /* ensure padding is included in the face size and any overflow is clipped */
+        /* keep the inner element slightly bigger than the face so rotation won't clip */
+        .card-inner {
+            position: relative;
+            width: calc(100% + 12px);   /* account for the flashcard padding */
+            height: calc(100% + 12px);
+            left: -6px;                 /* re-center because of the increased size */
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            border-radius: 10px;
+            will-change: transform;      /* hint for smoother animation on mobile */
+            box-sizing: border-box;
+        }
+
+        /* ensure faces still match the inner element and don't grow beyond it */
         .card-face {
-            box-sizing: border-box; /* IMPORTANT: include padding in the height */
-            overflow: hidden;       /* clip long names instead of letting the face grow */
+            box-sizing: border-box;
+            overflow: hidden;
             position: absolute;
             width: 100%;
             height: 100%;
@@ -78,15 +99,6 @@
             text-align: center;
         }
 
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-            border-radius: 10px;
-        }
-
         .card-inner.flipped {
             transform: rotateY(180deg);
         }
@@ -96,6 +108,7 @@
             justify-content: center;
             gap: 10px;
             flex-wrap: wrap;
+            margin-top: 6px;
             margin-bottom: 8px;
         }
 
