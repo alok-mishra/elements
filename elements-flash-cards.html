@@ -99,11 +99,12 @@
             border: none;
             color: #000;
             font-size: 1rem;
-            padding: 10px 16px;
+            padding: 12px 18px; /* slightly larger tappable area */
             border-radius: 8px;
             cursor: pointer;
             transition: 0.18s;
             min-width: 72px;
+            touch-action: manipulation; /* improve touch responsiveness */
         }
 
         button:hover {
@@ -135,9 +136,9 @@
             .card-back { font-size: 1rem; padding: 8px; }
 
             button {
-                padding: 12px 14px;
-                font-size: 1rem;
+                padding: 14px 16px;
                 min-width: 64px;
+                font-size: 1rem;
             }
 
             .legend {
@@ -170,7 +171,7 @@
         <button id="nextBtn" aria-label="Next">➡️ Next</button>
         <button id="shuffleBtn" aria-label="Shuffle">🔀 Shuffle</button>
         </div>
-        
+
         <div class="legend" id="legend" aria-hidden="false">
             Keyboard: Space = Flip · ← = Prev · → = Next · Shuffle = randomize deck<br />
             Mobile: Tap card = Flip · Swipe left/right = Next/Prev · Tap Shuffle to shuffle
@@ -278,7 +279,7 @@
             flashcard.addEventListener("click", (e) => {
                 // ignore synthetic click right after a touch event
                 if (Date.now() - lastTouch < 400) return;
-                inner.classList.toggle("flipped");
+                inner.classList.toggle("flipped"); // tap -> flip
             });
 
             // Touch gestures for mobile: tap -> flip, swipe -> next/prev
@@ -297,17 +298,17 @@
                 const dy = t.clientY - touchStartY;
                 const dt = Date.now() - touchStartTime;
 
-            // horizontal swipe (fast or long enough)
-            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) && dt < 700) {
-                if (dx < 0) next(); else prev();
-                return;
-            }
+                // horizontal swipe (fast or long enough)
+                if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) && dt < 700) {
+                    if (dx < 0) next(); else prev();
+                    return;
+                }
 
-            // treat as tap if movement small
-            if (Math.abs(dx) < 20 && Math.abs(dy) < 20 && dt < 500) {
-                inner.classList.toggle("flipped");
-            }
-        });
+                // treat as tap if movement small
+                if (Math.abs(dx) < 20 && Math.abs(dy) < 20 && dt < 500) {
+                    inner.classList.toggle("flipped"); // touch tap -> flip
+                }
+            });
 
             // Keyboard controls: Space toggles flip, ArrowRight -> next, ArrowLeft -> prev
             document.addEventListener('keydown', (e) => {
