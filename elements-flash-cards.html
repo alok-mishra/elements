@@ -100,6 +100,7 @@
             text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
             -webkit-user-select: none;
             user-select: none;
+            padding: 6px;
         }
 
         /* explicitly define front face transform */
@@ -129,9 +130,10 @@
             flex-wrap: wrap;
             margin-top: 6px;
             margin-bottom: 8px;
+            align-items: center;
         }
 
-        button {
+        button, select {
             background: var(--btn);
             border: none;
             color: #000;
@@ -143,6 +145,8 @@
             min-width: 72px;
             touch-action: manipulation; /* improve touch responsiveness */
         }
+
+        select { padding: 10px 12px; min-width: auto; }
 
         button:hover {
             background: var(--btn-hover);
@@ -252,6 +256,15 @@
 <body>
     <h1>Element Flashcards</h1>
 
+    <!-- deck picker -->
+    <div style="margin-bottom:10px; display:flex; gap:8px; align-items:center;">
+        <label for="deckSelect" style="font-size:0.95rem; color:rgba(255,255,255,0.92)">Deck:</label>
+        <select id="deckSelect" aria-label="Select deck">
+            <option value="elements">Elements (symbols → names)</option>
+            <option value="ions">Polyatomic Ions (formula → name)</option>
+        </select>
+    </div>
+
     <!-- replace the single .flashcard block with this wrapper that includes side arrows -->
     <div class="card-wrap">
         <button class="side-btn left" id="sidePrev" aria-label="Previous">&lt;</button>
@@ -271,14 +284,15 @@
         <button id="shuffleBtn" aria-label="Shuffle">🔀 Shuffle</button>
         <button id="flipBtn" aria-label="Flip">🔁 Flip</button>
         <button id="nextBtn" aria-label="Next">➡️ Next</button>
-        </div>
+    </div>
 
-        <div class="legend" id="legend" aria-hidden="false">
-            Keyboard: Space = Flip · ← = Prev · → = Next · Shuffle = randomize deck<br />
-            Mobile: Tap card = Flip · Swipe left/right = Next/Prev · Tap Shuffle to shuffle
+    <div class="legend" id="legend" aria-hidden="false">
+        Keyboard: Space = Flip · ← = Prev · → = Next · Shuffle = randomize deck<br />
+        Mobile: Tap card = Flip · Swipe left/right = Next/Prev · Tap Shuffle to shuffle
     </div>
 
     <script>
+            // Elements (unchanged)
         const elements = [
             { sym: "H", name: "Hydrogen" },
             { sym: "He", name: "Helium" },
@@ -334,7 +348,32 @@
             { sym: "Md", name: "Mendelevium" }
         ];
 
-            // deck holds the current order. start ordered but pick a random starting index
+            // Common polyatomic ions (cleaned up and corrected)
+            const ions = [
+                { sym: "NH4⁺", name: "Ammonium" },
+                { sym: "OH⁻", name: "Hydroxide" },
+                { sym: "CN⁻", name: "Cyanide" },
+                { sym: "CH3COO⁻", name: "Acetate (CH3COO⁻)" },
+                { sym: "CO3²⁻", name: "Carbonate" },
+                { sym: "HCO3⁻", name: "Hydrogen carbonate (bicarbonate)" },
+                { sym: "SO4²⁻", name: "Sulfate" },
+                { sym: "SO3²⁻", name: "Sulfite" },
+                { sym: "HSO4⁻", name: "Hydrogen sulfate (bisulfate)" },
+                { sym: "NO3⁻", name: "Nitrate" },
+                { sym: "NO2⁻", name: "Nitrite" },
+                { sym: "PO4³⁻", name: "Phosphate" },
+                { sym: "HPO4²⁻", name: "Hydrogen phosphate" },
+                { sym: "H2PO4⁻", name: "Dihydrogen phosphate" },
+                { sym: "ClO⁻", name: "Hypochlorite" },
+                { sym: "ClO2⁻", name: "Chlorite" },
+                { sym: "ClO3⁻", name: "Chlorate" },
+                { sym: "ClO4⁻", name: "Perchlorate" },
+                { sym: "MnO4⁻", name: "Permanganate" },
+                { sym: "Cr2O7²⁻", name: "Dichromate" },
+                { sym: "O2²⁻", name: "Peroxide" }
+            ];
+
+            // deck holds the current order. default to elements
             let deck = elements.slice();
             let current = Math.floor(Math.random() * deck.length);
 
@@ -342,12 +381,26 @@
         const back = document.getElementById("card-back");
         const inner = document.getElementById("card-inner");
             const flashcard = document.getElementById("flashcard");
+            const deckSelect = document.getElementById("deckSelect");
 
         function updateCard() {
             const el = deck[current];
+            if (!el) return;
             front.textContent = el.sym;
             back.textContent = el.name;
         }
+
+            function loadDeck(id) {
+                inner.classList.remove("flipped");
+                if (id === 'ions') {
+                    deck = ions.slice();
+                } else {
+                    deck = elements.slice();
+                }
+                // pick a random starting index so user doesn't always start at 0
+                current = Math.floor(Math.random() * deck.length);
+                updateCard();
+            }
 
             function shuffleDeck() {
                 // Fisher-Yates shuffle
@@ -356,24 +409,30 @@
                     [deck[i], deck[j]] = [deck[j], deck[i]];
                 }
                 current = 0; // show first card of shuffled deck
-                updateCard();
-            }
+            inner.classList.remove("flipped");
+            updateCard();
+        }
 
             function next() {
             current = (current + 1) % deck.length;
+            inner.classList.remove("flipped");
             updateCard();
         }
 
             function prev() {
             current = (current - 1 + deck.length) % deck.length;
+            inner.classList.remove("flipped");
             updateCard();
-            }
+        }
 
             // Buttons
             document.getElementById("flipBtn").onclick = () => inner.classList.toggle("flipped");
             document.getElementById("nextBtn").onclick = next;
             document.getElementById("prevBtn").onclick = prev;
             document.getElementById("shuffleBtn").onclick = shuffleDeck;
+
+            // deck selector
+            deckSelect.addEventListener('change', (e) => loadDeck(e.target.value));
 
             // Click on card toggles flip (desktop)
             let lastTouch = 0;
@@ -399,17 +458,17 @@
                 const dy = t.clientY - touchStartY;
                 const dt = Date.now() - touchStartTime;
 
-                // horizontal swipe (fast or long enough)
-                if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) && dt < 700) {
-                    if (dx < 0) next(); else prev();
-                    return;
-                }
+            // horizontal swipe (fast or long enough)
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) && dt < 700) {
+                if (dx < 0) next(); else prev();
+                return;
+            }
 
-                // treat as tap if movement small
-                if (Math.abs(dx) < 20 && Math.abs(dy) < 20 && dt < 500) {
-                    inner.classList.toggle("flipped"); // touch tap -> flip
-                }
-            });
+            // treat as tap if movement small
+            if (Math.abs(dx) < 20 && Math.abs(dy) < 20 && dt < 500) {
+                inner.classList.toggle("flipped"); // touch tap -> flip
+            }
+        });
 
             // Keyboard controls: Space toggles flip, ArrowRight -> next, ArrowLeft -> prev
             document.addEventListener('keydown', (e) => {
@@ -436,14 +495,14 @@
             }
         });
 
-    // initial render
-    updateCard();
+            // initial render (respect selected deck)
+            loadDeck(deckSelect.value || 'elements');
 
-    // hookup side arrow buttons (place after your existing button hookups)
-    const sidePrev = document.getElementById('sidePrev');
-    const sideNext = document.getElementById('sideNext');
-    if (sidePrev) sidePrev.addEventListener('click', (e) => { e.preventDefault(); prev(); });
-    if (sideNext) sideNext.addEventListener('click', (e) => { e.preventDefault(); next(); });
+            // hookup side arrow buttons (place after your existing button hookups)
+            const sidePrev = document.getElementById('sidePrev');
+            const sideNext = document.getElementById('sideNext');
+            if (sidePrev) sidePrev.addEventListener('click', (e) => { e.preventDefault(); prev(); });
+            if (sideNext) sideNext.addEventListener('click', (e) => { e.preventDefault(); next(); });
     </script>
 </body>
 
