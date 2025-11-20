@@ -13,10 +13,12 @@
             --btn: #00d4ff;
             --btn-hover: #00b0d6;
             --card-w: 340px;
-            --card-h: 204px; /* 1.666 aspect ratio */
+            --card-h: 204px;
+            /* 1.666 aspect ratio */
         }
 
-        html, body {
+        html,
+        body {
             height: 100%;
         }
 
@@ -27,8 +29,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* top-start layout so title isn't cropped */
-            min-height: 100vh; /* let browser manage address-bar changes */
+            justify-content: flex-start;
+            /* top-start layout so title isn't cropped */
+            min-height: 100vh;
+            /* let browser manage address-bar changes */
             margin: 0;
             padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 16px calc(16px + env(safe-area-inset-left, 0px));
             box-sizing: border-box;
@@ -60,13 +64,16 @@
         /* keep the inner element slightly bigger than the face so rotation won't clip */
         .card-inner {
             position: relative;
-            width: calc(100% + 12px);   /* account for the flashcard padding */
+            width: calc(100% + 12px);
+            /* account for the flashcard padding */
             height: calc(100% + 12px);
-            left: -6px;                 /* re-center because of the increased size */
+            left: -6px;
+            /* re-center because of the increased size */
             transition: transform 0.6s;
             transform-style: preserve-3d;
             border-radius: 10px;
-            will-change: transform;      /* hint for smoother animation on mobile */
+            will-change: transform;
+            /* hint for smoother animation on mobile */
             box-sizing: border-box;
         }
 
@@ -96,7 +103,8 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            font-size: 2.2rem; /* base size for symbol */
+            font-size: 2.2rem;
+            /* base size for symbol */
             text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
             -webkit-user-select: none;
             user-select: none;
@@ -114,7 +122,8 @@
         .card-back {
             -webkit-transform: rotateY(180deg);
             transform: rotateY(180deg);
-            font-size: 2.2rem; /* match the symbol size */
+            font-size: 2.2rem;
+            /* match the symbol size */
             padding: 8px 12px;
             text-align: center;
             line-height: 1.05;
@@ -134,20 +143,26 @@
             align-items: center;
         }
 
-        button, select {
+        button,
+        select {
             background: var(--btn);
             border: none;
             color: #000;
             font-size: 1rem;
-            padding: 12px 18px; /* slightly larger tappable area */
+            padding: 12px 18px;
+            /* slightly larger tappable area */
             border-radius: 8px;
             cursor: pointer;
             transition: 0.18s;
             min-width: 72px;
-            touch-action: manipulation; /* improve touch responsiveness */
+            touch-action: manipulation;
+            /* improve touch responsiveness */
         }
 
-        select { padding: 10px 12px; min-width: auto; }
+        select {
+            padding: 10px 12px;
+            min-width: auto;
+        }
 
         button:hover {
             background: var(--btn-hover);
@@ -156,9 +171,9 @@
         .legend {
             margin-top: 8px;
             font-size: 0.85rem;
-            color: rgba(255,255,255,0.92);
+            color: rgba(255, 255, 255, 0.92);
             text-align: center;
-            background: rgba(0,0,0,0.12);
+            background: rgba(0, 0, 0, 0.12);
             padding: 8px 12px;
             border-radius: 8px;
             max-width: 720px;
@@ -172,10 +187,18 @@
                 --card-h: calc(var(--card-w) * 0.6);
             }
 
-            h1 { font-size: 1.2rem; }
+            h1 {
+                font-size: 1.2rem;
+            }
 
-            .card-face { font-size: 1.6rem; }
-            .card-back { font-size: 1rem; padding: 8px; }
+            .card-face {
+                font-size: 1.6rem;
+            }
+
+            .card-back {
+                font-size: 1rem;
+                padding: 8px;
+            }
 
             button {
                 padding: 14px 16px;
@@ -191,8 +214,13 @@
 
         /* Larger screens */
         @media (min-width: 900px) {
-            .card-face { font-size: 2.6rem; }
-            .card-back { font-size: 1.4rem; }
+            .card-face {
+                font-size: 2.6rem;
+            }
+
+            .card-back {
+                font-size: 1.4rem;
+            }
         }
 
         /* New styles for card wrapper and side buttons */
@@ -226,30 +254,52 @@
             align-items: center;
             justify-content: center;
 
-            background: rgba(255,255,255,0.12);
-            border: 2px solid rgba(255,255,255,0.22);
+            background: rgba(255, 255, 255, 0.12);
+            border: 2px solid rgba(255, 255, 255, 0.22);
             color: #fff;
 
             width: 72px;
             height: calc(var(--card-h) - 12px);
             border-radius: 10px;
 
-            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
             transition: transform 0.12s, background 0.12s;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
         }
 
         /* position specific sides */
-        .side-btn.left  { left: 8px;  } /* inside wrapper padding so safe-area won't cut it off */
-        .side-btn.right { right: 8px; }
+        .side-btn.left {
+            left: 8px;
+        }
+
+        /* inside wrapper padding so safe-area won't cut it off */
+        .side-btn.right {
+            right: 8px;
+        }
 
         /* responsive shrink and keep text readable */
         @media (max-width: 480px) {
-            .side-btn { width: 56px; height: calc(var(--card-h) * 0.78); font-size: 2rem; }
-            .card-face { font-size: 1.9rem; }       /* keep names large in portrait */
-            .card-back  { font-size: 1.9rem; padding: 8px 12px; }
-            .card-wrap  { padding-inline: calc(8px + env(safe-area-inset-left, 0px)); padding-inline-end: calc(8px + env(safe-area-inset-right, 0px)); }
+            .side-btn {
+                width: 56px;
+                height: calc(var(--card-h) * 0.78);
+                font-size: 2rem;
+            }
+
+            .card-face {
+                font-size: 1.9rem;
+            }
+
+            /* keep names large in portrait */
+            .card-back {
+                font-size: 1.9rem;
+                padding: 8px 12px;
+            }
+
+            .card-wrap {
+                padding-inline: calc(8px + env(safe-area-inset-left, 0px));
+                padding-inline-end: calc(8px + env(safe-area-inset-right, 0px));
+            }
         }
     </style>
 </head>
@@ -272,7 +322,9 @@
 
         <div class="flashcard" id="flashcard" role="button" aria-label="Element flashcard">
             <div class="card-inner" id="card-inner">
-                <div class="card-face card-front" id="card-front"></div>
+                <div class="card-face card-front" id="card-front">
+                    <div id="front-content"></div>
+                </div>
                 <div class="card-face card-back" id="card-back"></div>
             </div>
         </div>
@@ -348,8 +400,8 @@
             { sym: "Md", name: "Mendelevium" }
         ];
 
-            // Common polyatomic ions (formulas use HTML sub/sup for proper display)
-            const ions = [
+        // Common polyatomic ions (formulas use HTML sub/sup for proper display)
+        const ions = [
             { sym: "NH<sub>4</sub><sup>+</sup>", name: "Ammonium" },
             { sym: "OH<sup>-</sup>", name: "Hydroxide" },
             { sym: "CN<sup>-</sup>", name: "Cyanide" },
@@ -373,15 +425,15 @@
             { sym: "O<sub>2</sub><sup>2-</sup>", name: "Peroxide" }
         ];
 
-            // deck holds the current order. start ordered but pick a random starting index
-            let deck = elements.slice();
-            let current = Math.floor(Math.random() * deck.length);
+        // deck holds the current order. start ordered but pick a random starting index
+        let deck = elements.slice();
+        let current = Math.floor(Math.random() * deck.length);
 
-        const front = document.getElementById("card-front");
+        const front = document.getElementById("front-content");
         const back = document.getElementById("card-back");
         const inner = document.getElementById("card-inner");
-            const flashcard = document.getElementById("flashcard");
-            const deckSelect = document.getElementById('deckSelect');
+        const flashcard = document.getElementById("flashcard");
+        const deckSelect = document.getElementById('deckSelect');
 
         function updateCard() {
             const el = deck[current];
@@ -394,68 +446,68 @@
             back.textContent = el.name || '';
         }
 
-            function loadDeck(id) {
-                inner.classList.remove("flipped");
+        function loadDeck(id) {
+            inner.classList.remove("flipped");
             deck = (id === 'ions') ? ions.slice() : elements.slice();
             current = Math.floor(Math.random() * deck.length);
             updateCard();
         }
 
-            function shuffleDeck() {
-                // Fisher-Yates shuffle
-                for (let i = deck.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [deck[i], deck[j]] = [deck[j], deck[i]];
-                }
-                current = 0; // show first card of shuffled deck
+        function shuffleDeck() {
+            // Fisher-Yates shuffle
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+            current = 0; // show first card of shuffled deck
             inner.classList.remove("flipped");
             updateCard();
         }
 
-            function next() {
+        function next() {
             current = (current + 1) % deck.length;
             inner.classList.remove("flipped");
             updateCard();
         }
 
-            function prev() {
+        function prev() {
             current = (current - 1 + deck.length) % deck.length;
             inner.classList.remove("flipped");
             updateCard();
         }
 
-            // Buttons
-            document.getElementById("flipBtn").onclick = () => inner.classList.toggle("flipped");
-            document.getElementById("nextBtn").onclick = next;
-            document.getElementById("prevBtn").onclick = prev;
-            document.getElementById("shuffleBtn").onclick = shuffleDeck;
+        // Buttons
+        document.getElementById("flipBtn").onclick = () => inner.classList.toggle("flipped");
+        document.getElementById("nextBtn").onclick = next;
+        document.getElementById("prevBtn").onclick = prev;
+        document.getElementById("shuffleBtn").onclick = shuffleDeck;
 
-            // deck selector
-            if (deckSelect) deckSelect.addEventListener('change', (e) => loadDeck(e.target.value));
+        // deck selector
+        if (deckSelect) deckSelect.addEventListener('change', (e) => loadDeck(e.target.value));
 
-            // Click on card toggles flip (desktop)
-            let lastTouch = 0;
-            flashcard.addEventListener("click", (e) => {
-                // ignore synthetic click right after a touch event
-                if (Date.now() - lastTouch < 400) return;
-                inner.classList.toggle("flipped"); // tap -> flip
-            });
+        // Click on card toggles flip (desktop)
+        let lastTouch = 0;
+        flashcard.addEventListener("click", (e) => {
+            // ignore synthetic click right after a touch event
+            if (Date.now() - lastTouch < 400) return;
+            inner.classList.toggle("flipped"); // tap -> flip
+        });
 
-            // Touch gestures for mobile: tap -> flip, swipe -> next/prev
-            let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
-            flashcard.addEventListener("touchstart", (e) => {
-                if (e.touches.length !== 1) return;
-                touchStartX = e.touches[0].clientX;
-                touchStartY = e.touches[0].clientY;
-                touchStartTime = Date.now();
-            }, { passive: true });
+        // Touch gestures for mobile: tap -> flip, swipe -> next/prev
+        let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+        flashcard.addEventListener("touchstart", (e) => {
+            if (e.touches.length !== 1) return;
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+        }, { passive: true });
 
-            flashcard.addEventListener("touchend", (e) => {
-                lastTouch = Date.now();
-                const t = e.changedTouches[0];
-                const dx = t.clientX - touchStartX;
-                const dy = t.clientY - touchStartY;
-                const dt = Date.now() - touchStartTime;
+        flashcard.addEventListener("touchend", (e) => {
+            lastTouch = Date.now();
+            const t = e.changedTouches[0];
+            const dx = t.clientX - touchStartX;
+            const dy = t.clientY - touchStartY;
+            const dt = Date.now() - touchStartTime;
 
             // horizontal swipe (fast or long enough)
             if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) && dt < 700) {
@@ -469,8 +521,8 @@
             }
         });
 
-            // Keyboard controls: Space toggles flip, ArrowRight -> next, ArrowLeft -> prev
-            document.addEventListener('keydown', (e) => {
+        // Keyboard controls: Space toggles flip, ArrowRight -> next, ArrowLeft -> prev
+        document.addEventListener('keydown', (e) => {
             // when focus is on an input/textarea ignore
             const tag = (document.activeElement && document.activeElement.tagName) || '';
             if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable) return;
@@ -494,14 +546,14 @@
             }
         });
 
-            // initial render (respect selected deck if present)
-            if (deckSelect) loadDeck(deckSelect.value || 'elements'); else updateCard();
+        // initial render (respect selected deck if present)
+        if (deckSelect) loadDeck(deckSelect.value || 'elements'); else updateCard();
 
-            // hookup side arrow buttons (place after your existing button hookups)
-            const sidePrev = document.getElementById('sidePrev');
-            const sideNext = document.getElementById('sideNext');
-            if (sidePrev) sidePrev.addEventListener('click', (e) => { e.preventDefault(); prev(); });
-            if (sideNext) sideNext.addEventListener('click', (e) => { e.preventDefault(); next(); });
+        // hookup side arrow buttons (place after your existing button hookups)
+        const sidePrev = document.getElementById('sidePrev');
+        const sideNext = document.getElementById('sideNext');
+        if (sidePrev) sidePrev.addEventListener('click', (e) => { e.preventDefault(); prev(); });
+        if (sideNext) sideNext.addEventListener('click', (e) => { e.preventDefault(); next(); });
     </script>
 </body>
 
