@@ -107,6 +107,7 @@
         .card-front {
             -webkit-transform: rotateY(0deg);
             transform: rotateY(0deg);
+            white-space: nowrap;
         }
 
         /* back face: same large font as symbol and vendor-prefix transform */
@@ -260,7 +261,7 @@
     <div style="margin-bottom:10px; display:flex; gap:8px; align-items:center;">
         <label for="deckSelect" style="font-size:0.95rem; color:rgba(255,255,255,0.92)">Deck:</label>
         <select id="deckSelect" aria-label="Select deck">
-            <option value="elements">Elements (symbols → names)</option>
+            <option value="elements">Elements (symbol → name)</option>
             <option value="ions">Polyatomic Ions (formula → name)</option>
         </select>
     </div>
@@ -292,7 +293,6 @@
     </div>
 
     <script>
-            // Elements (unchanged)
         const elements = [
             { sym: "H", name: "Hydrogen" },
             { sym: "He", name: "Helium" },
@@ -348,32 +348,32 @@
             { sym: "Md", name: "Mendelevium" }
         ];
 
-            // Common polyatomic ions (cleaned up and corrected)
+            // Common polyatomic ions (formulas use HTML sub/sup for proper display)
             const ions = [
-                { sym: "NH4⁺", name: "Ammonium" },
-                { sym: "OH⁻", name: "Hydroxide" },
-                { sym: "CN⁻", name: "Cyanide" },
-                { sym: "CH3COO⁻", name: "Acetate (CH3COO⁻)" },
-                { sym: "CO3²⁻", name: "Carbonate" },
-                { sym: "HCO3⁻", name: "Hydrogen carbonate (bicarbonate)" },
-                { sym: "SO4²⁻", name: "Sulfate" },
-                { sym: "SO3²⁻", name: "Sulfite" },
-                { sym: "HSO4⁻", name: "Hydrogen sulfate (bisulfate)" },
-                { sym: "NO3⁻", name: "Nitrate" },
-                { sym: "NO2⁻", name: "Nitrite" },
-                { sym: "PO4³⁻", name: "Phosphate" },
-                { sym: "HPO4²⁻", name: "Hydrogen phosphate" },
-                { sym: "H2PO4⁻", name: "Dihydrogen phosphate" },
-                { sym: "ClO⁻", name: "Hypochlorite" },
-                { sym: "ClO2⁻", name: "Chlorite" },
-                { sym: "ClO3⁻", name: "Chlorate" },
-                { sym: "ClO4⁻", name: "Perchlorate" },
-                { sym: "MnO4⁻", name: "Permanganate" },
-                { sym: "Cr2O7²⁻", name: "Dichromate" },
-                { sym: "O2²⁻", name: "Peroxide" }
-            ];
+            { sym: "NH<sub>4</sub><sup>+</sup>", name: "Ammonium" },
+            { sym: "OH<sup>-</sup>", name: "Hydroxide" },
+            { sym: "CN<sup>-</sup>", name: "Cyanide" },
+            { sym: "CH<sub>3</sub>COO<sup>-</sup>", name: "Acetate" },
+            { sym: "CO<sub>3</sub><sup>2-</sup>", name: "Carbonate" },
+            { sym: "HCO<sub>3</sub><sup>-</sup>", name: "Hydrogen carbonate (bicarbonate)" },
+            { sym: "SO<sub>4</sub><sup>2-</sup>", name: "Sulfate" },
+            { sym: "SO<sub>3</sub><sup>2-</sup>", name: "Sulfite" },
+            { sym: "HSO<sub>4</sub><sup>-</sup>", name: "Hydrogen sulfate (bisulfate)" },
+            { sym: "NO<sub>3</sub><sup>-</sup>", name: "Nitrate" },
+            { sym: "NO<sub>2</sub><sup>-</sup>", name: "Nitrite" },
+            { sym: "PO<sub>4</sub><sup>3-</sup>", name: "Phosphate" },
+            { sym: "HPO<sub>4</sub><sup>2-</sup>", name: "Hydrogen phosphate" },
+            { sym: "H<sub>2</sub>PO<sub>4</sub><sup>-</sup>", name: "Dihydrogen phosphate" },
+            { sym: "ClO<sup>-</sup>", name: "Hypochlorite" },
+            { sym: "ClO<sub>2</sub><sup>-</sup>", name: "Chlorite" },
+            { sym: "ClO<sub>3</sub><sup>-</sup>", name: "Chlorate" },
+            { sym: "ClO<sub>4</sub><sup>-</sup>", name: "Perchlorate" },
+            { sym: "MnO<sub>4</sub><sup>-</sup>", name: "Permanganate" },
+            { sym: "Cr<sub>2</sub>O<sub>7</sub><sup>2-</sup>", name: "Dichromate" },
+            { sym: "O<sub>2</sub><sup>2-</sup>", name: "Peroxide" }
+        ];
 
-            // deck holds the current order. default to elements
+            // deck holds the current order. start ordered but pick a random starting index
             let deck = elements.slice();
             let current = Math.floor(Math.random() * deck.length);
 
@@ -381,26 +381,25 @@
         const back = document.getElementById("card-back");
         const inner = document.getElementById("card-inner");
             const flashcard = document.getElementById("flashcard");
-            const deckSelect = document.getElementById("deckSelect");
+            const deckSelect = document.getElementById('deckSelect');
 
         function updateCard() {
             const el = deck[current];
             if (!el) return;
-            front.textContent = el.sym;
-            back.textContent = el.name;
+            // If a formula contains HTML tags (sub/sup), render as HTML; otherwise use textContent
+            if (el.sym && /<\/?(sub|sup)>/.test(el.sym)) front.innerHTML = el.sym;
+            else if (el.sym) front.textContent = el.sym;
+            else front.textContent = '';
+
+            back.textContent = el.name || '';
         }
 
             function loadDeck(id) {
                 inner.classList.remove("flipped");
-                if (id === 'ions') {
-                    deck = ions.slice();
-                } else {
-                    deck = elements.slice();
-                }
-                // pick a random starting index so user doesn't always start at 0
-                current = Math.floor(Math.random() * deck.length);
-                updateCard();
-            }
+            deck = (id === 'ions') ? ions.slice() : elements.slice();
+            current = Math.floor(Math.random() * deck.length);
+            updateCard();
+        }
 
             function shuffleDeck() {
                 // Fisher-Yates shuffle
@@ -432,7 +431,7 @@
             document.getElementById("shuffleBtn").onclick = shuffleDeck;
 
             // deck selector
-            deckSelect.addEventListener('change', (e) => loadDeck(e.target.value));
+            if (deckSelect) deckSelect.addEventListener('change', (e) => loadDeck(e.target.value));
 
             // Click on card toggles flip (desktop)
             let lastTouch = 0;
@@ -495,8 +494,8 @@
             }
         });
 
-            // initial render (respect selected deck)
-            loadDeck(deckSelect.value || 'elements');
+            // initial render (respect selected deck if present)
+            if (deckSelect) loadDeck(deckSelect.value || 'elements'); else updateCard();
 
             // hookup side arrow buttons (place after your existing button hookups)
             const sidePrev = document.getElementById('sidePrev');
